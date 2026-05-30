@@ -14,6 +14,10 @@ public class Learner {
     private String learnerEmail;
     private String learnerPhone;
 
+    // No-argument constructor
+    public Learner() {
+    }
+
     public Learner(Long learnerId, String learnerName, String learnerEmail, String learnerPhone) {
         this.learnerId = learnerId;
         this.learnerName = learnerName;
