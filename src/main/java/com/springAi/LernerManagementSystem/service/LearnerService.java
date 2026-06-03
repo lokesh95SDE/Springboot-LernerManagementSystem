@@ -72,6 +72,7 @@ public class LearnerService {
         // Convert to DTOs and return
         return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
+
     private LearnerDto convertToDTO(Learner learner) {
         return new LearnerDto(
             learner.getLearnerId(),
