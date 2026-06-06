@@ -13,6 +13,17 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class LearnerSpecification {
 
+    /**
+     * Build a Specification that checks learnerPhone equals the provided phone.
+     * <p>
+     * Internals: Specifications are thin wrappers around the JPA Criteria API. The
+     * returned lambda is not executed until the repository runs the query. If the phone
+     * is null or empty we return {@code criteriaBuilder.conjunction()} which represents
+     * a no-op predicate (1 = 1) so the filter is effectively ignored when combined with others.
+     *
+     * @param phone phone value to match
+     * @return Specification for phone equality
+     */
     public static Specification<Learner> hasPhone(String phone) {
         return (root, query, criteriaBuilder) -> {
             if (phone == null || phone.isEmpty()) {
@@ -22,6 +33,16 @@ public class LearnerSpecification {
         };
     }
 
+    /**
+     * Build a Specification that performs a case-insensitive LIKE search on learnerName.
+     *
+     * Internals: The CriteriaBuilder constructs a LIKE predicate. We lower both sides to
+     * achieve case-insensitive matching. If the name parameter is empty we return a
+     * conjunction predicate so this condition is ignored by the final query.
+     *
+     * @param name partial name to match
+     * @return Specification for name LIKE matching
+     */
     public static Specification<Learner> hasName(String name) {
         return (root, query, criteriaBuilder) -> {
             if (name == null || name.isEmpty()) {
@@ -32,6 +53,12 @@ public class LearnerSpecification {
         };
     }
 
+    /**
+     * Build a Specification that checks learnerEmail equals the provided email.
+     *
+     * @param email email to match
+     * @return Specification for email equality
+     */
     public static Specification<Learner> hasEmail(String email) {
         return (root, query, criteriaBuilder) -> {
             if (email == null || email.isEmpty()) {
@@ -43,6 +70,3 @@ public class LearnerSpecification {
     }
 
 }
-
-
-

@@ -24,6 +24,19 @@ package com.springAi.LernerManagementSystem.dto;
 //
 //DTOs push data OUT to the API client (or accept incoming JSON).
 
+/**
+ * Data Transfer Object for Learner API requests and responses.
+ *
+ * Records are immutable holders for values and provide a concise way to declare
+ * a simple DTO. The controller receives JSON and Jackson maps fields to the record's
+ * components. Since records are value-based, they are a good fit for stateless API models.
+ *
+ * Components:
+ * @param learnerId unique identifier (may be null for create requests)
+ * @param learnerName learner's name
+ * @param learnerEmail learner's email
+ * @param learnerPhone learner's phone number
+ */
 public record LearnerDto(
         Long learnerId,
         String learnerName,
