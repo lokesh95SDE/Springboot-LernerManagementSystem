@@ -1,9 +1,9 @@
 package com.springAi.LernerManagementSystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 /**
  * JPA Entity representing a Learner.
@@ -24,6 +24,18 @@ public class Learner {
     private String learnerEmail;
     private String learnerPhone;
 
+    public List<Cohort> getCohort() {
+        return cohort;
+    }
+
+    public void setCohort(List<Cohort> cohort) {
+        this.cohort = cohort;
+    }
+
+    @ManyToMany(mappedBy = "learners")
+    @JsonIgnore
+    private List<Cohort> cohort;
+
     // No-argument constructor
     public Learner() {
     }
@@ -43,6 +55,14 @@ public class Learner {
         this.learnerName = learnerName;
         this.learnerEmail = learnerEmail;
         this.learnerPhone = learnerPhone;
+    }
+
+    public Learner(Long learnerId, String learnerName, String learnerEmail, String learnerPhone, List<Cohort> cohort) {
+        this.learnerId = learnerId;
+        this.learnerName = learnerName;
+        this.learnerEmail = learnerEmail;
+        this.learnerPhone = learnerPhone;
+        this.cohort = cohort;
     }
 
     /**

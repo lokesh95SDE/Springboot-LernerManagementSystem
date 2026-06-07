@@ -75,9 +75,9 @@ public class LearnerController {
      * @return 200 OK with Learner body if found
      */
     @GetMapping("/learners/{learnerId}")
-    public ResponseEntity<Learner> getLearnerById(@PathVariable("learnerId") Long learnerId) throws LearnerNotFoundException {
-        Learner learner =  _learnerService.findById(learnerId);
-        return ResponseEntity.ok(learner);
+    public ResponseEntity<LearnerDto> getLearnerById(@PathVariable("learnerId") Long learnerId) throws LearnerNotFoundException {
+        LearnerDto learnerDto =  _learnerService.getLearnerDtoById(learnerId);
+        return ResponseEntity.ok(learnerDto);
     }
 
     /**
@@ -109,19 +109,19 @@ public class LearnerController {
      * @return list of matching Learner entities
      */
     @GetMapping("/learners")
-    public List<Learner> getLearnerById(@RequestParam(value="learnerName",required = false) String learnerName,
+    public List<LearnerDto> getLearners(@RequestParam(value="learnerName",required = false) String learnerName,
                                         @RequestParam(value="learnerEmail",required = false) String learnerEmail)
     {
         if(learnerName != null && learnerEmail != null){
-            return _learnerService.findByNameandEmail(learnerName,learnerEmail);
+            return _learnerService.toDtoList(_learnerService.findByNameandEmail(learnerName,learnerEmail));
         }
         if(learnerName != null ){
-            return _learnerService.findByName(learnerName);
+            return _learnerService.toDtoList(_learnerService.findByName(learnerName));
         }
         if(learnerEmail != null ){
-            return _learnerService.findByEmail(learnerEmail);
+            return _learnerService.toDtoList(_learnerService.findByEmail(learnerEmail));
         }
-        return _learnerService.getAllLearners();
+        return _learnerService.getAllLearnersDto();
     }
 
     /**

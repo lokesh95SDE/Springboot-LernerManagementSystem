@@ -1,5 +1,7 @@
 package com.springAi.LernerManagementSystem.service;
 
+import com.springAi.LernerManagementSystem.dto.CohortDto;
+import com.springAi.LernerManagementSystem.entity.Cohort;
 import com.springAi.LernerManagementSystem.exceptions.LearnerNotFoundException;
 import com.springAi.LernerManagementSystem.dto.LearnerDto;
 import com.springAi.LernerManagementSystem.entity.Learner;
@@ -173,7 +175,16 @@ public class LearnerService {
             learner.getLearnerId(),
             learner.getLearnerName(),
             learner.getLearnerEmail(),
-            learner.getLearnerPhone()
+            learner.getLearnerPhone(),
+                learner.getCohort() != null
+                        ? learner.getCohort().stream()
+                        .map(cohort -> new CohortDto(
+                                cohort.getCohortId(),
+                                cohort.getCohortName(),
+                                cohort.getCohortDescription(),
+                                List.of()))
+                        .toList()
+                        : List.of()
         );
     }
 
@@ -189,11 +200,31 @@ public class LearnerService {
      */
     private Learner convertToEntity(LearnerDto learnerDto) {
         return new Learner(
-                learnerDto.learnerId(),
-                learnerDto.learnerName(),
-                learnerDto.learnerEmail(),
-                learnerDto.learnerPhone()
+                learnerDto.getLearnerId(),
+                learnerDto.getLearnerName(),
+                learnerDto.getLearnerEmail(),
+                learnerDto.getLearnerPhone()
         );
     }
 
+    /**
+     * Return a DTO for the given learner id.
+     */
+    public LearnerDto getLearnerDtoById(Long learnerId) throws LearnerNotFoundException {
+        return convertToDTO(findById(learnerId));
+    }
+
+    /**
+     * Convert a list of Learner entities to DTOs.
+     */
+    public List<LearnerDto> toDtoList(List<Learner> learners) {
+        return learners.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    /**
+     * Return all learners as DTOs.
+     */
+    public List<LearnerDto> getAllLearnersDto() {
+        return _learnerRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 }

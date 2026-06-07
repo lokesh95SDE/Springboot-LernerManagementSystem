@@ -24,6 +24,8 @@ package com.springAi.LernerManagementSystem.dto;
 //
 //DTOs push data OUT to the API client (or accept incoming JSON).
 
+import java.util.List;
+
 /**
  * Data Transfer Object for Learner API requests and responses.
  *
@@ -37,11 +39,60 @@ package com.springAi.LernerManagementSystem.dto;
  * @param learnerEmail learner's email
  * @param learnerPhone learner's phone number
  */
-public record LearnerDto(
-        Long learnerId,
-        String learnerName,
-        String learnerEmail,
-        String learnerPhone
-) {
+public class LearnerDto {
+    private Long learnerId;
+    private String learnerName;
+    private String learnerEmail;
+    private String learnerPhone;
+    private List<CohortDto> cohortDtos;
+
+    public LearnerDto() {
+    }
+
+    public LearnerDto(Long learnerId, String learnerName, String learnerEmail, String learnerPhone, List<CohortDto> cohortDtos) {
+        this.learnerId = learnerId;
+        this.learnerName = learnerName;
+        this.learnerEmail = learnerEmail;
+        this.learnerPhone = learnerPhone;
+        this.cohortDtos = cohortDtos;
+    }
+    public List<CohortDto> getCohortDtos() {
+        return cohortDtos;
+    }
+    public void setCohortDtos(List<CohortDto> cohortDtos) {
+        this.cohortDtos = cohortDtos;
+    }
+
+    public Long getLearnerId() {
+        return learnerId;
+    }
+
+    public void setLearnerId(Long learnerId) {
+        this.learnerId = learnerId;
+    }
+
+    public String getLearnerName() {
+        return learnerName;
+    }
+
+    public void setLearnerName(String learnerName) {
+        this.learnerName = learnerName;
+    }
+
+    public String getLearnerEmail() {
+        return learnerEmail;
+    }
+
+    public void setLearnerEmail(String learnerEmail) {
+        this.learnerEmail = learnerEmail;
+    }
+
+    public String getLearnerPhone() {
+        return learnerPhone;
+    }
+
+    public void setLearnerPhone(String learnerPhone) {
+        this.learnerPhone = learnerPhone;
+    }
 
 }
