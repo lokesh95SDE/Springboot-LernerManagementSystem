@@ -33,6 +33,7 @@ Purpose: concise, interview-focused mapping of the app data flow and the concret
 
 ---
 
+
 ## 2) Refactoring — Bad vs Best Practice (direct comparisons)
 
 Note: each row is a specific issue found and the concrete improvement made in this repo.
