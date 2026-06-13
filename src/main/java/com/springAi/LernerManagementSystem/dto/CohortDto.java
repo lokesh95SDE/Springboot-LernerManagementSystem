@@ -13,7 +13,8 @@ public record CohortDto(
         Long cohortId,
         String cohortName,
         String cohortDescription,
-        List<Long> learnerIds
+        List<Long> learnerIds,
+        Long courseId
 ) {
 
 }

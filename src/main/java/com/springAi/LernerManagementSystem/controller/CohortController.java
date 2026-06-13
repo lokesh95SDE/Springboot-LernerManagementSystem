@@ -6,25 +6,39 @@ import com.springAi.LernerManagementSystem.exceptions.CohortNotFoundException;
 import com.springAi.LernerManagementSystem.exceptions.LearnerNotFoundException;
 import com.springAi.LernerManagementSystem.service.CohortService;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/cohorts")
 public class CohortController {
 
-    @Autowired
-    private CohortService cohortService;
+    private final CohortService cohortService;
 
-    @PostMapping("/cohorts")
+    public CohortController(CohortService cohortService) {
+        this.cohortService = cohortService;
+    }
+
+    @PostMapping
+    public Cohort createCohort(@RequestBody Cohort Cohort) throws CohortNotFoundException {
+        return cohortService.createCohortWithoutCourse(Cohort);
+    }
+
+    @PostMapping("/with-course")
     public CohortDto createCohort(@RequestBody CohortDto cohortDto) throws CohortNotFoundException {
         return cohortService.createCohort(cohortDto);
     }
 
+    @PostMapping("/{cohortId}/learners/{learnerId}")
+    public CohortDto assignLearnerToCohort(@PathVariable Long cohortId,
+                                           @PathVariable Long learnerId) throws CohortNotFoundException, LearnerNotFoundException {
+        return cohortService.assignLearnerToCohort(cohortId, learnerId);
+    }
+
     @PostMapping("/assignLearnerToCohort")
-    public CohortDto assignLearnerToCohort(@RequestParam(required=false) Long cohortId,
+    public CohortDto assignLearnerToCohortPathParam(@RequestParam(required=false) Long cohortId,
                                            @RequestParam(required=false) Long learnerId) throws CohortNotFoundException, LearnerNotFoundException, BadRequestException {
         if (cohortId == null || learnerId == null) {
             throw new BadRequestException("cohortId and learnerId are required");
@@ -32,14 +46,14 @@ public class CohortController {
         return cohortService.assignLearnerToCohort(cohortId, learnerId);
     }
 
-    @GetMapping("/cohorts")
+    @GetMapping
     public List<CohortDto> getAllCohorts() throws CohortNotFoundException {
         return cohortService.getAllCohortsWithLearnerId();
     }
 
-    @GetMapping("/cohortsList")
-    public List<Cohort> getAllCohortsList() throws CohortNotFoundException {
-        return cohortService.getAllCohortsWithLeanerDetails();
+    @GetMapping("/details")
+    public List<CohortDto> getAllCohortsList() throws CohortNotFoundException {
+        return cohortService.getAllCohortsWithLearnerId();
     }
 
     /**
@@ -55,5 +69,15 @@ public class CohortController {
     @ExceptionHandler(CohortNotFoundException.class)
     public ResponseEntity<String> handleCohortNotFoundException(CohortNotFoundException e){
         return ResponseEntity.status(404).body(e.getMessage());
+    }
+
+    @ExceptionHandler(LearnerNotFoundException.class)
+    public ResponseEntity<String> handleLearnerNotFoundException(LearnerNotFoundException e){
+        return ResponseEntity.status(404).body(e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadRequestException(IllegalArgumentException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

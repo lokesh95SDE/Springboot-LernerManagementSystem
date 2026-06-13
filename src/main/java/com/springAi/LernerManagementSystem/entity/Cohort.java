@@ -1,24 +1,12 @@
 package com.springAi.LernerManagementSystem.entity;
 
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Cohort {
-    /**
-     * Use field access consistently. Placing @Id on the field ensures JPA inspects
-     * annotations on fields rather than getters. Mixing access types can cause
-     * relationship annotations on fields to be ignored which leads Hibernate to try
-     * to map entity types as basic JDBC types (the root cause of the JdbcType error).
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cohortId;
@@ -27,29 +15,32 @@ public class Cohort {
 
     private String cohortDescription;
 
-    /**
-     * Many-to-many association to Learner. Define a join table explicitly so Hibernate
-     * knows how to map the relationship to relational tables.
-     */
     @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "cohort_learner",
-//            joinColumns = @JoinColumn(name = "cohort_id"),
-//            inverseJoinColumns = @JoinColumn(name = "learner_id")
-//    )
-    private List<Learner> learners;
+    @JoinTable(
+            name = "cohort_learner",
+            joinColumns = @JoinColumn(name = "cohort_id"),
+            inverseJoinColumns = @JoinColumn(name = "learner_id")
+    )
+    private List<Learner> learners = new ArrayList<>();
 
-    // No-argument constructor required by JPA
+    // a cohort belongs to a single course (owning side).
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    // No-arg constructor required by JPA
     public Cohort() {
     }
 
-    public Cohort(Long cohortId, String cohortName, String cohortDescription, List<Learner> learners) {
+    public Cohort(Long cohortId, String cohortName, String cohortDescription, List<Learner> learners, Course course) {
         this.cohortId = cohortId;
         this.cohortName = cohortName;
         this.cohortDescription = cohortDescription;
         this.learners = learners;
+        this.course = course;
     }
 
+    // getters / setters
     public Long getCohortId() {
         return cohortId;
     }
@@ -82,6 +73,12 @@ public class Cohort {
         this.learners = learners;
     }
 
+    public Course getCourse() {
+        return course;
+    }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
 }

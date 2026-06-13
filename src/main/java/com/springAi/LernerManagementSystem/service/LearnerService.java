@@ -10,6 +10,7 @@ import com.springAi.LernerManagementSystem.repository.LearnerSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -148,6 +149,7 @@ public class LearnerService {
      * @param learnerPhone optional phone filter
      * @return matching learners as DTOs
      */
+    @Transactional(readOnly = true)
     public List<LearnerDto> searchLearners(String learnerName, String learnerEmail, String learnerPhone) {
         Specification<Learner> spec = Specification
                 .where(LearnerSpecification.hasName(learnerName))
@@ -182,7 +184,8 @@ public class LearnerService {
                                 cohort.getCohortId(),
                                 cohort.getCohortName(),
                                 cohort.getCohortDescription(),
-                                List.of()))
+                                List.of(),
+                                cohort.getCourse() == null ? null : cohort.getCourse().getCourseId()))
                         .toList()
                         : List.of()
         );
@@ -210,6 +213,7 @@ public class LearnerService {
     /**
      * Return a DTO for the given learner id.
      */
+    @Transactional(readOnly = true)
     public LearnerDto getLearnerDtoById(Long learnerId) throws LearnerNotFoundException {
         return convertToDTO(findById(learnerId));
     }
@@ -217,6 +221,7 @@ public class LearnerService {
     /**
      * Convert a list of Learner entities to DTOs.
      */
+    @Transactional(readOnly = true)
     public List<LearnerDto> toDtoList(List<Learner> learners) {
         return learners.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
@@ -224,6 +229,7 @@ public class LearnerService {
     /**
      * Return all learners as DTOs.
      */
+    @Transactional(readOnly = true)
     public List<LearnerDto> getAllLearnersDto() {
         return _learnerRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
