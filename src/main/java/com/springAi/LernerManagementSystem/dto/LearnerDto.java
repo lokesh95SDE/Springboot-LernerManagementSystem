@@ -24,6 +24,9 @@ package com.springAi.LernerManagementSystem.dto;
 //
 //DTOs push data OUT to the API client (or accept incoming JSON).
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -41,8 +44,11 @@ import java.util.List;
  */
 public class LearnerDto {
     private Long learnerId;
+    @NotNull
     private String learnerName;
+    @Email
     private String learnerEmail;
+    @NotNull
     private String learnerPhone;
     private List<CohortDto> cohortDtos;
 

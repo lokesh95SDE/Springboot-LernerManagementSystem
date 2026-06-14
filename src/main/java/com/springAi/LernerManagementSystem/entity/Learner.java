@@ -2,6 +2,9 @@ package com.springAi.LernerManagementSystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -21,7 +24,10 @@ public class Learner {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long learnerId;
     private String learnerName;
+    @Email
     private String learnerEmail;
+    @NotNull
+    @NotEmpty
     private String learnerPhone;
 
     public List<Cohort> getCohort() {

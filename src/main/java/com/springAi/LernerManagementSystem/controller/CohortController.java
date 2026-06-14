@@ -2,14 +2,17 @@ package com.springAi.LernerManagementSystem.controller;
 
 import com.springAi.LernerManagementSystem.dto.CohortDto;
 import com.springAi.LernerManagementSystem.entity.Cohort;
+import com.springAi.LernerManagementSystem.entity.Learner;
 import com.springAi.LernerManagementSystem.exceptions.CohortNotFoundException;
 import com.springAi.LernerManagementSystem.exceptions.LearnerNotFoundException;
 import com.springAi.LernerManagementSystem.service.CohortService;
+import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cohorts")
@@ -31,10 +34,11 @@ public class CohortController {
         return cohortService.createCohort(cohortDto);
     }
 
-    @PostMapping("/{cohortId}/learners/{learnerId}")
-    public CohortDto assignLearnerToCohort(@PathVariable Long cohortId,
-                                           @PathVariable Long learnerId) throws CohortNotFoundException, LearnerNotFoundException {
-        return cohortService.assignLearnerToCohort(cohortId, learnerId);
+    // Accept a JSON array of learners in the request body and assign them to the cohort
+    @PostMapping("/{cohortId}/learners")
+    public CohortDto createAndAssignLearnerToCohort(@PathVariable("cohortId") Long cohortId,
+                                                    @RequestBody List<Learner> learnersList) throws CohortNotFoundException, LearnerNotFoundException {
+        return cohortService.createAndAssignLearnerToCohort(cohortId, learnersList);
     }
 
     @PostMapping("/assignLearnerToCohort")

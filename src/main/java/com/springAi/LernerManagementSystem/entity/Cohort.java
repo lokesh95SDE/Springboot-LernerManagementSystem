@@ -15,7 +15,7 @@ public class Cohort {
 
     private String cohortDescription;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "cohort_learner",
             joinColumns = @JoinColumn(name = "cohort_id"),

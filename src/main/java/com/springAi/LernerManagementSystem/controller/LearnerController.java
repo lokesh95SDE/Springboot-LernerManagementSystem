@@ -4,10 +4,16 @@ import com.springAi.LernerManagementSystem.exceptions.LearnerNotFoundException;
 import com.springAi.LernerManagementSystem.dto.LearnerDto;
 import com.springAi.LernerManagementSystem.entity.Learner;
 import com.springAi.LernerManagementSystem.service.LearnerService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) -----------------> any where if use date formate can use this in controller
 
@@ -56,7 +62,7 @@ public class LearnerController {
      * @return the saved LearnerDto including generated id
      */
     @PostMapping("/learners")
-    public LearnerDto createLearner(@RequestBody LearnerDto learnerDto ){
+    public LearnerDto createLearner(@Valid @RequestBody LearnerDto learnerDto ){
         return _learnerService.createLearner(learnerDto);
     }
 
@@ -94,6 +100,8 @@ public class LearnerController {
     public ResponseEntity<String> handleLearnerNotFoundException(LearnerNotFoundException e){
         return ResponseEntity.status(404).body(e.getMessage());
     }
+
+
 
     /**
      * List learners. Supports optional query parameters to filter by name and/or email.
