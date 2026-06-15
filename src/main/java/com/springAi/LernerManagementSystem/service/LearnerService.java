@@ -8,6 +8,7 @@ import com.springAi.LernerManagementSystem.entity.Learner;
 import com.springAi.LernerManagementSystem.repository.LearnerRepository;
 import com.springAi.LernerManagementSystem.repository.LearnerSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,7 +88,9 @@ public class LearnerService {
      * @return found Learner entity
      * @throws LearnerNotFoundException when the learner does not exist
      */
+//    @Cacheable(value = "learners", key = "#learnerId")
     public Learner findById(Long learnerId) throws LearnerNotFoundException {
+//        System.out.println("Fetching from DB");
         Optional<Learner> learnerOptional = _learnerRepository.findById(learnerId);
         if(learnerOptional.isEmpty()){
             throw new LearnerNotFoundException("Learner with id" + learnerId + " not found");
@@ -213,8 +216,10 @@ public class LearnerService {
     /**
      * Return a DTO for the given learner id.
      */
+    @Cacheable(value = "learners", key = "#learnerId")
     @Transactional(readOnly = true)
     public LearnerDto getLearnerDtoById(Long learnerId) throws LearnerNotFoundException {
+        System.out.println("Fetching from DB");
         return convertToDTO(findById(learnerId));
     }
 

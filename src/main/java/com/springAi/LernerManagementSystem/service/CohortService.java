@@ -9,6 +9,10 @@ import com.springAi.LernerManagementSystem.exceptions.LearnerNotFoundException;
 import com.springAi.LernerManagementSystem.repository.CohortRepository;
 import com.springAi.LernerManagementSystem.repository.CourseRepository;
 import com.springAi.LernerManagementSystem.repository.LearnerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -195,5 +199,18 @@ public class CohortService {
         // Persist changes: rely on cascade from Cohort -> Learner to persist new learners
         Cohort updatedCohort = cohortRepository.save(cohort);
         return convertEntityToDto(updatedCohort);
+    }
+
+    public Page<Cohort> fetchPageinatedAndSortedCohort(int pageSize, int pageNumber, String sortBy, String sortDir) {
+        Sort.Direction direction;
+        if(sortDir.equals("asc")){
+            direction = Sort.Direction.ASC;
+        }else {
+            direction = Sort.Direction.DESC;
+        }
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,direction,sortBy);
+        Page<Cohort> cohorts = cohortRepository.findAll(pageable);
+        // Map the Page<Cohort> to Page<CohortDto> preserving paging metadata
+        return cohorts;
     }
 }
