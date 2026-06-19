@@ -30,4 +30,10 @@ private AuthenticaitonAutherizationService authenticaitonAutherizationService;
         return authenticaitonAutherizationService.verifyUser(token);
     }
 
+
+    @GetMapping("/Signin")
+    public String signInUser(@RequestParam("username") String username, @RequestParam("password") String password) throws Exception {
+        return authenticaitonAutherizationService.signInUser(username, password);
+    }
+
 }

@@ -30,7 +30,7 @@ public class AuthenticationAutherisationConfig{
         System.out.println("CUSTOM SECURITY CONFIG LOADED");
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**", "/Register") // Added /Register here
+                        .ignoringRequestMatchers("/h2-console/**", "/Register","/Signin") // Added /Register here
                 )
 //        This line tells Spring Security to disable CSRF protection only for requests to /h2-console/**. For all other POST, PUT, and DELETE requests (including your POST to /Register), CSRF protection is enabled. Since your curl command does not include a CSRF token, Spring Security rejects the request, and the ExceptionTranslationFilter then redirects the unauthenticated user to the login page.
                 .headers(headers ->
@@ -40,6 +40,7 @@ public class AuthenticationAutherisationConfig{
                         .requestMatchers(
                                 "/Register",
                                 "/verify",
+                                "/Signin",
                                 "/h2-console/**"
                         ).permitAll()
                         .anyRequest().authenticated()

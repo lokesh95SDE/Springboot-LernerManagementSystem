@@ -1,6 +1,7 @@
 package com.springAi.LernerManagementSystem.service;
 
 import com.springAi.LernerManagementSystem.entity.User;
+import com.springAi.LernerManagementSystem.Util.JwtUtil;
 import com.springAi.LernerManagementSystem.entity.VerificationToken;
 import com.springAi.LernerManagementSystem.repository.UserRepository;
 import com.springAi.LernerManagementSystem.repository.VerificationTokenRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Optional;
 
@@ -77,4 +79,24 @@ public class AuthenticaitonAutherizationService implements UserDetailsService {
         return "Verification is successful";
     }
 
+//   Validate user is present
+//    If present then Validate use is enabled
+//    If enabled then validate password is correct as per hashed
+//    If password is correct then Generate the JWT token and return to user
+    public String signInUser(String username, String password) {
+        Optional<User> userOptional = userRepository.findByUserName(username);
+        if(!userOptional.isPresent()){
+            return  "User not found with username: " + username;
+        }
+        User user = userOptional.get();
+        if(!user.isEnabled()) {
+            return "User is not enabled. Please verify your email.";
+        }
+            boolean isPasswordMatch = bCryptPasswordEncoder.matches(password, user.getPassword());
+            if (!isPasswordMatch) {
+                return "Incorrect password.";
+            }
+
+        return JwtUtil.generateToken(user);
+    }
 }
