@@ -96,7 +96,6 @@ public class AuthenticaitonAutherizationService implements UserDetailsService {
             if (!isPasswordMatch) {
                 return "Incorrect password.";
             }
-
         return JwtUtil.generateToken(user);
     }
 }

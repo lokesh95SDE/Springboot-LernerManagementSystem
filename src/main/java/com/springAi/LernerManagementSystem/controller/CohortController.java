@@ -9,6 +9,9 @@ import com.springAi.LernerManagementSystem.service.CohortService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +28,20 @@ public class CohortController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('Admin')")
     public Cohort createCohort(@RequestBody Cohort Cohort) throws CohortNotFoundException {
-        return cohortService.createCohortWithoutCourse(Cohort);
+        Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
+        authentication.getAuthorities()
+                .forEach(a -> System.out.println(a.getAuthority()));
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("Admin"));
+
+        if (isAdmin) {
+            return cohortService.createCohortWithoutCourse(Cohort);
+        }
+        return null;
+
+
     }
 
     @PostMapping("/with-course")

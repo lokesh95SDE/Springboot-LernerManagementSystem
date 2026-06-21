@@ -14,12 +14,22 @@ public class VerificationToken {
     @OneToOne
     private User user;
     private Date expiryAt;
+    private String roles;
 
-    public VerificationToken(Long id, String token, User user, Date expiryAt) {
+    public VerificationToken(Long id, String token, User user, Date expiryAt, String roles) {
         this.id = id;
         this.token = token;
         this.user = user;
         this.expiryAt = expiryAt;
+        this.roles = roles;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     public VerificationToken(){
