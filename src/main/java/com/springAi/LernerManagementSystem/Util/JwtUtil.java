@@ -32,7 +32,7 @@ public class JwtUtil {
                 .verifyWith(KEY)
                 .build()
                 .parseSignedClaims(token)
-//                .parseEncryptedClaims(token)
+////                .parseEncryptedClaims(token)
                 .getPayload();
         return clams;
     }
