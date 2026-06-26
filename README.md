@@ -6,6 +6,7 @@ Purpose: concise, interview-focused mapping of the app data flow and the concret
 
 ## 1) End‑to‑End Flow (short sequential overview)
 
+
 1. Client → Controller
    - HTTP request arrives at a `@RestController` (`LearnerController`, `CohortController`).
    - Spring MVC maps path, query and JSON body using `@PathVariable`, `@RequestParam`, `@RequestBody`.
